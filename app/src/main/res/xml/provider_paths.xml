@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="pixelrr"
+        path="Android/data/org.drulabs.pixelr/files/Pictures/"/>
+    <external-path
+        name="external_files"
+        path="."/>
+</paths>

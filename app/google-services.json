@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "835832928476",
+    "firebase_url": "https://pixelr-gdgpune.firebaseio.com",
+    "project_id": "pixelr-gdgpune",
+    "storage_bucket": "pixelr-gdgpune.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835832928476:android:042c332a2f801fbe",
+        "android_client_info": {
+          "package_name": "org.drulabs.pixelr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835832928476-ov2bgsr60mtfe07kq39ntkc5li9mcr03.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.drulabs.pixelr",
+            "certificate_hash": "ec44361af5ca72a5b39099f8d1e58111f49f59e6"
+          }
+        },
+        {
+          "client_id": "835832928476-p9cdfigna9johuush2pohb29q2d89nol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoJD-uViLWOLn-cXVPrW5WiBKRd0etgsU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835832928476-p9cdfigna9johuush2pohb29q2d89nol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
