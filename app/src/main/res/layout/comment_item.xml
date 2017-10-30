@@ -54,7 +54,7 @@
                     tools:text="Dec-08-2016, 12:23:43"/>
 
                 <org.drulabs.pixelr.ui.DruTextView
-                    android:id="@+id/comment_text"
+                    android:id="@+id/note_text"
                     style="@style/actual_comment_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

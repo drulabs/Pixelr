@@ -67,11 +67,11 @@ public class CommentsActivity extends AppCompatActivity implements CommentContra
         loaderView = findViewById(R.id.comment_layout_loader);
 
         commentBase = findViewById(R.id.comment_layout_base);
-        recyclerView = findViewById(R.id.comment_list);
+        recyclerView = findViewById(R.id.notes_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        etComment = findViewById(R.id.txt_comment);
-        fabSend = findViewById(R.id.fab_send);
+        etComment = findViewById(R.id.txt_user_note);
+        fabSend = findViewById(R.id.fab_add_note);
         fabSend.setOnClickListener(this);
 
         commentsAdapter = new CommentsAdapter(this);
@@ -162,7 +162,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentContra
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fab_send:
+            case R.id.fab_add_note:
                 CommentDTO comment = new CommentDTO();
                 comment.setArtifactId(artifactId);
                 comment.setCommenterPic(Store.getInstance(this).getUserPicUrl());

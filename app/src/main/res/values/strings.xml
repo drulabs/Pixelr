@@ -11,7 +11,7 @@
     <string name="loading_please_wait">Please wait...</string>
     <string name="hash_msg">#Cuteness</string>
     <string name="start_typing_here">Start typing...</string>
-    <string name="very_long_text">so cute and so so so pretty, just like an angel from the heavens above. Up above the world so high like a diamond in the sky. Twinkle twinkle little star how I wonder what you are?</string>
+    <string name="very_long_text">This is a big text called lorem ipsum dolor This is a big text called lorem ipsum dolor This is a big text called lorem ipsum dolor</string>
     <string name="very_standard_text">She is so cute and perfect. I feel like hugging her all the time.</string>
     <string name="no_comments_found">No more comments found...</string>
     <string name="text_share_now">share</string>
@@ -56,4 +56,6 @@
     <string name="pick_from_galery_title">Select picture</string>
     <string name="dynamic_link_process_error">Error processing dynamic link</string>
     <string name="text_share_push_all">Push notify</string>
+    <string name="crash_app_text">Crash the app</string>
+    <string name="user_notes_text">User notes</string>
 </resources>

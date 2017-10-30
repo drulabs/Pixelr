@@ -6,11 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,29 +30,11 @@ public class FirebaseImageHelper {
 
     public static void loadFBStorageImageIn(Context context, StorageReference storageRef, ImageView img) {
         // Load the image using Glide
-        Glide.with(context)
-                .using(new FirebaseImageLoader())
+        GlideApp.with(context)
                 .load(storageRef)
                 .placeholder(R.drawable.ic_face_black_800dp)
-                .error(R.mipmap.ic_launcher)
-                .animate(R.anim.fade_in)
-                .listener(new RequestListener<StorageReference, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, StorageReference model,
-                                               Target<GlideDrawable> target, boolean
-                                                       isFirstResource) {
-                        e.printStackTrace();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, StorageReference
-                            model, Target<GlideDrawable> target, boolean isFromMemoryCache,
-                                                   boolean isFirstResource) {
-                        Log.d(TAG, "Image downloaded");
-                        return false;
-                    }
-                })
+                .error(R.mipmap.ic_app_icon)
+                .centerCrop()
                 .into(img);
     }
 
@@ -70,11 +47,11 @@ public class FirebaseImageHelper {
     }
 
     public static void loadImageFromUrlInto(Context context, String imageUri, ImageView img) {
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(imageUri.toString())
-                .error(R.drawable.ic_face_black_800dp)
                 .placeholder(R.drawable.ic_face_black_800dp)
-                .animate(R.anim.fade_in)
+                .error(R.mipmap.ic_app_icon)
+                .centerCrop()
                 .into(img);
     }
 

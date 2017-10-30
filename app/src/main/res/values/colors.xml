@@ -15,5 +15,6 @@
     <color name="contact_search_background">#98CB4A</color>
     <color name="contact_search_activity_background">#f76d3c</color>
     <color name="light_green">#81DD71</color>
+    <color name="damp_green">#86B88A</color>
     <color name="transparent">#00344344</color>
 </resources>

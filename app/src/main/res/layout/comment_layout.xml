@@ -21,11 +21,11 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/txt_comment"
+            android:layout_above="@+id/txt_user_note"
             android:visibility="visible">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/comment_list"
+                android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
@@ -45,14 +45,14 @@
         </FrameLayout>
 
         <org.drulabs.pixelr.ui.DruEditText
-            android:id="@+id/txt_comment"
+            android:id="@+id/txt_user_note"
             style="@style/text_input_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:layout_toLeftOf="@+id/fab_send"
+            android:layout_toLeftOf="@+id/fab_add_note"
             android:gravity="end"
             android:hint="@string/start_typing_here"
             android:maxLength="150"
@@ -60,7 +60,7 @@
             android:textAlignment="textEnd"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_send"
+            android:id="@+id/fab_add_note"
             style="@style/comment_text_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

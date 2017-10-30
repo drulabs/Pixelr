@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comment_layout_base"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    android:background="@color/damp_green"
+    tools:context="org.drulabs.pixelr.screens.notes.UserNotes">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/txt_user_note"
+        android:visibility="visible">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notes_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            tools:listitem="@layout/item_note">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <org.drulabs.pixelr.ui.DruTextView
+            style="@style/comment_text_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/no_comments_found"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <org.drulabs.pixelr.ui.DruEditText
+        android:id="@+id/txt_user_note"
+        style="@style/text_input_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toStartOf="@+id/fab_add_note"
+        android:gravity="end"
+        android:hint="@string/start_typing_here"
+        android:maxLength="150"
+        android:maxLines="2"
+        android:textAlignment="textEnd"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_note"
+        style="@style/comment_text_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/margin_small"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_send"
+        app:backgroundTint="@color/light_green"
+        app:elevation="4dp"/>
+</RelativeLayout>

@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.screens.add.AddPicture;
 import org.drulabs.pixelr.screens.login.LoginActivity;
+import org.drulabs.pixelr.screens.notes.UserNotes;
 import org.drulabs.pixelr.ui.NotificationToast;
 import org.drulabs.pixelr.utils.Store;
 import org.drulabs.pixelr.utils.Utility;
@@ -107,6 +108,10 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
                     e.printStackTrace();
                 }
                 return true;
+            case R.id.menu_user_notes:
+                Intent notestIntent = new Intent(this, UserNotes.class);
+                startActivity(notestIntent);
+                return true;
             case R.id.menu_logout:
                 //Logout the user and navigate to Login screen
                 FirebaseAuth.getInstance().signOut();
@@ -114,6 +119,9 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
                 startActivity(loginPageIntent);
                 LandingPage.this.finish();
                 return true;
+            case R.id.menu_crash_app:
+                // this is only for testing purpose
+                throw new ArrayIndexOutOfBoundsException("Fatal array out of bound exception");
             case R.id.add_stuff:
                 navigateToAddPicActivity();
                 return true;

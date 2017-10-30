@@ -20,12 +20,19 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/bug_report_menu"
-        android:title="@string/text_bug_report"
         android:icon="@mipmap/ic_bug_report"
+        android:title="@string/text_bug_report"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_user_notes"
+        android:title="@string/user_notes_text"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_logout"
         android:title="@string/logout_text"
         app:showAsAction="never"/>
-
+    <item
+        android:id="@+id/menu_crash_app"
+        android:title="@string/crash_app_text"
+        app:showAsAction="never"/>
 </menu>

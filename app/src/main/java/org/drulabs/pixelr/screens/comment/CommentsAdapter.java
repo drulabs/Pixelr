@@ -86,7 +86,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         CommentsVH(View itemView) {
             super(itemView);
             tvTimestamp = itemView.findViewById(R.id.comment_timestamp);
-            tvComment = itemView.findViewById(R.id.comment_text);
+            tvComment = itemView.findViewById(R.id.note_text);
             tvCommenter = itemView.findViewById(R.id.commenter_name);
             imgCommenter = itemView.findViewById(R.id.img_commenter);
         }

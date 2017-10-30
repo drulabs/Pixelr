@@ -20,6 +20,9 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    defaultConfig {
+        multiDexEnabled true
+    }
 }
 
 dependencies {
@@ -58,7 +61,10 @@ dependencies {
     //////////////////////////////////////////////////////
 
     //Firebase UI
-    implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
+    implementation 'com.firebaseui:firebase-ui:3.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    //implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
     //////////////////////////////////////////////////////
 
     //Firebase Remote Config
@@ -66,7 +72,7 @@ dependencies {
     //////////////////////////////////////////////////////
 
     //Firebase Dynamic links
-    implementation  'com.google.firebase:firebase-invites:11.4.2'
+    implementation 'com.google.firebase:firebase-invites:11.4.2'
     //////////////////////////////////////////////////////
 
     //Firebase Crash Reporting
@@ -81,5 +87,6 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
     //////////////////////////////////////////////////////
 }
+
 
 apply plugin: 'com.google.gms.google-services'
