@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -28,12 +27,10 @@ public class AddPicture extends AppCompatActivity implements AddPicContract.View
             "HH:mm");
 
     ProgressDialog progressDialog;
-
+    long epochTimestamp = System.currentTimeMillis();
     // UI references
     private ImageView imgAddPic;
     private EditText timestamp, photographer, comment;
-    long epochTimestamp = System.currentTimeMillis();
-
     private AddPicContract.Presenter mPresenter;
 
     @Override
@@ -92,6 +89,7 @@ public class AddPicture extends AppCompatActivity implements AddPicContract.View
 
                 // Some random pic naming logic
                 newPic.setPicName("JPEG_" + myName + "_" + epochTimestamp);
+                newPic.setUploaderId(Store.getInstance(AddPicture.this).getMyKey());
 
                 mPresenter.saveData(newPic, comment.getText().toString());
                 return true;
@@ -138,6 +136,9 @@ public class AddPicture extends AppCompatActivity implements AddPicContract.View
     @Override
     public void onSaveSuccessful() {
         NotificationToast.showToast(this, getString(R.string.image_upload_successful));
+        if (!isDestroyed()) {
+            finish();
+        }
     }
 
     @Override
@@ -149,6 +150,7 @@ public class AddPicture extends AppCompatActivity implements AddPicContract.View
     public void resetFields() {
         comment.setText("");
         imgAddPic.setImageResource(R.mipmap.ic_camera_plus);
+        epochTimestamp = 0;
     }
 
     @Override

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share_dynamic_link"
+        android:icon="@mipmap/ic_share"
+        android:title="@string/text_share_now"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/share_push_notification"
+        android:icon="@mipmap/ic_share"
+        android:title="@string/text_share_push_all"
+        app:showAsAction="never"/>
+</menu>

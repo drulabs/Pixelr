@@ -39,6 +39,7 @@
     <dimen name="box_regular">60dp</dimen>
     <dimen name="box_large">80dp</dimen>
     <dimen name="box_x_large">100dp</dimen>
+    <dimen name="box_xx_large">150dp</dimen>
 
     <!--Elevation related-->
     <dimen name="elevation_tiny">4dp</dimen>

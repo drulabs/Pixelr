@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>text_color</key>
+        <value>#D53411</value>
+    </entry>
+    <entry>
+        <key>bg_color</key>
+        <value>#868CB6</value>
+    </entry>
+    <entry>
+        <key>test_12</key>
+        <value>test text</value>
+    </entry>
+    <entry>
+        <key>like_title</key>
+        <value>Likes</value>
+    </entry>
+    <entry>
+        <key>geography_field</key>
+        <value>India and US</value>
+    </entry>
+</defaultsMap>

@@ -42,7 +42,15 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
-        <activity android:name=".screens.like.LikesActivity">
+        <activity android:name=".screens.singlepic.SinglePicPage">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="drulabs.org" android:scheme="http"/>
+                <data android:host="drulabs.org" android:scheme="https"/>
+            </intent-filter>
+
         </activity>
 
 

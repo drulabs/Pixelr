@@ -12,8 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.screens.add.AddPicture;
+import org.drulabs.pixelr.screens.login.LoginActivity;
 import org.drulabs.pixelr.ui.NotificationToast;
 import org.drulabs.pixelr.utils.Store;
 import org.drulabs.pixelr.utils.Utility;
@@ -23,8 +26,7 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
     private static final long SWIPE_REFRESH_DELAY_MILLIS = 2500;
     private static final String TAG_PICS = "pics";
     PicsFragment picsFragment;
-    // Is the current user admin ???
-    private boolean isAdmin = false;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private Bundle savedInstanceState;
 
@@ -35,12 +37,14 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
 
         this.savedInstanceState = savedInstanceState;
 
+        Bundle extras = getIntent().getExtras();
+
         swipeRefreshLayout = findViewById(R.id.pics_swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         picsFragment = (PicsFragment) getSupportFragmentManager().findFragmentByTag(TAG_PICS);
         if (picsFragment == null) {
-            picsFragment = PicsFragment.newInstance("Pics", "none");
+            picsFragment = PicsFragment.newInstance("Pics", "none", extras);
             picsFragment.setRetainInstance(true);
         }
 
@@ -105,6 +109,10 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
                 return true;
             case R.id.menu_logout:
                 //Logout the user and navigate to Login screen
+                FirebaseAuth.getInstance().signOut();
+                Intent loginPageIntent = new Intent(LandingPage.this, LoginActivity.class);
+                startActivity(loginPageIntent);
+                LandingPage.this.finish();
                 return true;
             case R.id.add_stuff:
                 navigateToAddPicActivity();

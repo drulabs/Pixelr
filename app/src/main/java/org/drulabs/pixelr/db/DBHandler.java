@@ -86,13 +86,13 @@ public class DBHandler {
         }
     }
 
-    public void updateLikedArtifacts(List<LikeDTO> likeList) {
+    public synchronized void updateLikedArtifacts(List<LikeDTO> likeList) {
         for (LikeDTO like : likeList) {
             setLikedForPic(like.getArtifactId(), true);
         }
     }
 
-    public boolean isPicLiked(String picKey) {
+    public synchronized boolean isPicLiked(String picKey) {
 
         Cursor cursor = null;
 

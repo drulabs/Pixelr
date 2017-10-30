@@ -55,7 +55,7 @@
 
                 <org.drulabs.pixelr.ui.DruTextView
                     android:id="@+id/comment_text"
-                    style="@style/comment_text"
+                    style="@style/actual_comment_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_medium"

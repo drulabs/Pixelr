@@ -1,10 +1,12 @@
 package org.drulabs.pixelr.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by kaushald on 05/02/17.
  */
 
-public class PictureDTO implements Comparable<PictureDTO> {
+public class PictureDTO implements Comparable<PictureDTO>, Serializable {
 
     private String picName;
     private long dateTaken;
@@ -12,6 +14,7 @@ public class PictureDTO implements Comparable<PictureDTO> {
     private int likesCount;
     private String photoCredit;
     private String picURL;
+    private String uploaderId;
     private String thumbURL;
 
     public String getPicName() {
@@ -68,6 +71,14 @@ public class PictureDTO implements Comparable<PictureDTO> {
 
     public void setThumbURL(String thumbURL) {
         this.thumbURL = thumbURL;
+    }
+
+    public String getUploaderId() {
+        return uploaderId;
+    }
+
+    public void setUploaderId(String uploaderId) {
+        this.uploaderId = uploaderId;
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.drulabs.pixelr.config.Constants;
 import org.drulabs.pixelr.dto.LikeDTO;
+import org.drulabs.pixelr.dto.PictureDTO;
 import org.drulabs.pixelr.utils.Store;
 
 import java.util.LinkedList;
@@ -50,6 +51,38 @@ public class LikesHandler {
         likesDB = FirebaseDatabase.getInstance().getReference().child(Constants.LIKES_DB);
     }
 
+    static void fetchLikedArtifacts(Context context, final IArtifactsCallback callback) {
+        DatabaseReference likesDB = FirebaseDatabase.getInstance().getReference().child(Constants
+                .LIKES_DB);
+        Query likedArtifactsQuery = likesDB.orderByChild(Constants.LIKES_LIKEDBY_ID).equalTo
+                (Store.getInstance(context).getMyKey());
+        likedArtifactsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.hasChildren()) {
+
+                    List<LikeDTO> likesList = new LinkedList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        LikeDTO like = snapshot.getValue(LikeDTO.class);
+                        likesList.add(like);
+                    }
+
+                    callback.onArtifactsFetched(likesList);
+
+                } else {
+                    callback.onError();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onError();
+            }
+        });
+    }
+
     public void fetchLikes() {
         if (hasMoreItems && mListener != null) {
             Query likesQuery = likesDB.orderByChild(Constants.LIKES_ARTIFACT_ID).equalTo
@@ -82,45 +115,36 @@ public class LikesHandler {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    mListener.onNoMoreLikes();
                 }
             });
         }
     }
 
-    public static void fetchLikedArtifacts(Context context, final IArtifactsCallback callback) {
-        DatabaseReference likesDB = FirebaseDatabase.getInstance().getReference().child(Constants
-                .LIKES_DB);
-        Query likedArtifactsQuery = likesDB.orderByChild(Constants.LIKES_LIKEDBY_ID).equalTo
-                (Store.getInstance(context).getMyKey());
-        likedArtifactsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null && dataSnapshot.hasChildren()) {
-
-                    List<LikeDTO> likesList = new LinkedList<>();
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        LikeDTO like = snapshot.getValue(LikeDTO.class);
-                        likesList.add(like);
+    public void fetchPic(String picKey) {
+        FirebaseDatabase.getInstance().getReference().child(Constants.PICS_DB).child(picKey)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot != null) {
+                            PictureDTO pic = snapshot.getValue(PictureDTO.class);
+                            pic.setPicURL(Constants.PICS_DB + "/" + pic.getPicName() + ".jpg");
+                            pic.setThumbURL(Constants.PICS_DB + "/" + pic.getPicName() + "_thumb" +
+                                    ".jpg");
+                            mListener.onPicFetched(snapshot.getKey(), pic);
+                        } else {
+                            mListener.onError();
+                        }
                     }
 
-                    callback.onArtifactsFetched(likesList);
-
-                } else {
-                    callback.onError();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onError();
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        mListener.onError();
+                    }
+                });
     }
 
-    public void updateLikeStatus(final boolean isLiked, long fireDate) {
+    void updateLikeStatus(final boolean isLiked, long fireDate) {
 
         String likesKey = artifactId + "_" + store.getMyKey();
 
@@ -175,6 +199,10 @@ public class LikesHandler {
 
         void onNoMoreLikes();
         //TODO implement pagination for likes
+
+        void onPicFetched(String key, PictureDTO picture);
+
+        void onError();
     }
 
     public interface IArtifactsCallback {

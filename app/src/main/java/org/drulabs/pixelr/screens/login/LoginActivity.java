@@ -1,11 +1,14 @@
 package org.drulabs.pixelr.screens.login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -34,10 +37,12 @@ import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.dto.UserDTO;
 import org.drulabs.pixelr.screens.landing.LandingPage;
 import org.drulabs.pixelr.utils.Store;
+import org.drulabs.pixelr.utils.Utility;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int GOOGLE_SIGN_IN = 9001;
+    private static final int CAMERA_CODE = 7001;
     private final String GoogleOAuthClientId = "835832928476-p9cdfigna9johuush2pohb29q2d89nol" +
             ".apps.googleusercontent.com";
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -48,12 +53,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private TwitterLoginButton btnTwitterLogin;
     private Bundle extras;
 
+    private ProgressBar loginProgress;
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        processLogin(currentUser);
+        if (currentUser != null) {
+            navigateToLandingPage();
+        } else {
+            boolean writePermissionGranted = Utility.checkPermission(Manifest.permission
+                    .WRITE_EXTERNAL_STORAGE, this);
+            if (!writePermissionGranted) {
+                Utility.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        CAMERA_CODE, this);
+            }
+        }
     }
 
     @Override
@@ -96,9 +112,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
         extras = getIntent().getExtras();
+
+        loginProgress = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        extras = intent.getExtras();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equalsIgnoreCase(permissions[0]) &&
+                grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            finish();
+        }
     }
 
     private void handleTwitterSession(TwitterSession session) {
+
+        loginProgress.setVisibility(View.VISIBLE);
+
         Log.d("Login", "handleTwitterSession:" + session);
 
         AuthCredential credential = TwitterAuthProvider.getCredential(
@@ -153,6 +189,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
+        loginProgress.setVisibility(View.VISIBLE);
+
         Log.d("Login", "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -186,21 +225,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Store.getInstance(LoginActivity.this).setUser(currentUser);
 
                 //navigate to landing page
-                Intent landingPageIntent = new Intent(LoginActivity.this, LandingPage.class);
-                if (extras != null) {
-                    landingPageIntent.putExtras(extras);
-                }
-                startActivity(landingPageIntent);
+                navigateToLandingPage();
 
-                // Finish Login page
-                if (!isDestroyed()) {
-                    LoginActivity.this.finish();
-                }
+
+                //dismiss progress bar
+                loginProgress.setVisibility(View.GONE);
+
             }).addOnFailureListener(ex -> {
                 Log.e("Login", "Error", ex);
                 Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong),
                         Toast.LENGTH_SHORT).show();
+                loginProgress.setVisibility(View.GONE);
             });
+        }
+    }
+
+    private void navigateToLandingPage() {
+        Intent landingPageIntent = new Intent(LoginActivity.this, LandingPage.class);
+        if (extras != null) {
+            landingPageIntent.putExtras(extras);
+        }
+        startActivity(landingPageIntent);
+
+        // Finish Login page
+        if (!isDestroyed()) {
+            LoginActivity.this.finish();
         }
     }
 

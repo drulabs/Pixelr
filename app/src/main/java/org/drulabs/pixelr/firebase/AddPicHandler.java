@@ -17,6 +17,7 @@ import com.google.firebase.storage.UploadTask;
 import org.drulabs.pixelr.config.Constants;
 import org.drulabs.pixelr.dto.CommentDTO;
 import org.drulabs.pixelr.dto.PictureDTO;
+import org.drulabs.pixelr.utils.Store;
 
 import java.io.ByteArrayOutputStream;
 
@@ -108,8 +109,8 @@ public class AddPicHandler {
         picComment.setText(comment);
         picComment.setArtifactId(picKey);
         picComment.setTimestamp(System.currentTimeMillis());
-        picComment.setCommenter(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        picComment.setCommenterPic(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+        picComment.setCommenter(Store.getInstance(context).getMyName());
+        picComment.setCommenterPic(Store.getInstance(context).getUserPicUrl());
         commentsDB.push().setValue(picComment);
 
     }

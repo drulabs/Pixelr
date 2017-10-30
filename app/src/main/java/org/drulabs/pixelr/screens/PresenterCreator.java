@@ -9,8 +9,8 @@ import org.drulabs.pixelr.screens.comment.CommentContract;
 import org.drulabs.pixelr.screens.comment.CommentsPresenter;
 import org.drulabs.pixelr.screens.landing.PicsContract;
 import org.drulabs.pixelr.screens.landing.PicsPresenter;
-import org.drulabs.pixelr.screens.like.LikesContract;
-import org.drulabs.pixelr.screens.like.LikesPresenter;
+import org.drulabs.pixelr.screens.singlepic.SinglePicContract;
+import org.drulabs.pixelr.screens.singlepic.SinglePicPresenter;
 
 /**
  * Created by kaushald on 25/01/17.
@@ -37,8 +37,8 @@ public class PresenterCreator {
     }
 
     @NonNull
-    public static LikesContract.Presenter createLikesPresenter(Activity activity, LikesContract
-            .View view, String artifactId, String artifactType) {
-        return new LikesPresenter(activity, view, artifactId, artifactType);
+    public static SinglePicContract.Presenter createLikesPresenter(Activity activity, SinglePicContract
+            .View view, String artifactId) {
+        return new SinglePicPresenter(activity, view, artifactId);
     }
 }

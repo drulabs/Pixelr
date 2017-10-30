@@ -121,12 +121,7 @@ public class CommentsHandler {
 
                 callback.onCommentAddedSuccessfully();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                callback.onError();
-            }
-        });
+        }).addOnFailureListener(e -> callback.onError());
     }
 
     public interface Callback {

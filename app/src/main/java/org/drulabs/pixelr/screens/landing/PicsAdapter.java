@@ -67,7 +67,6 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.PicsVH> {
             photoMap.putAll(photos);
             this.photos.addAll(getValueListFromMap(photos));
             this.notifyDataSetChanged();
-            dbHandler.addPic(photos);
         }
     }
 

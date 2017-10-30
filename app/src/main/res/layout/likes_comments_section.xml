@@ -6,7 +6,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@+id/item_image"
               android:orientation="horizontal"
-              android:weightSum="6">
+              android:weightSum="6" android:baselineAligned="false">
 
     <FrameLayout
         android:layout_width="0dp"
@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/accent_background"
-            android:drawableLeft="@mipmap/ic_unlike"
             android:drawableStart="@mipmap/ic_unlike"
             android:gravity="center"
             android:padding="@dimen/padding_regular"
@@ -39,7 +38,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/accent_background"
-            android:drawableLeft="@mipmap/ic_comments"
             android:drawableStart="@mipmap/ic_comments"
             android:gravity="center"
             android:padding="@dimen/padding_regular"
@@ -57,9 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:background="@drawable/accent_background"
-            android:drawableLeft="@mipmap/ic_share"
             android:drawableStart="@mipmap/ic_share"
             android:gravity="center"
             android:padding="@dimen/padding_regular"/>
@@ -76,9 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:background="@drawable/accent_background"
-            android:drawableLeft="@mipmap/ic_download"
             android:drawableStart="@mipmap/ic_download"
             android:gravity="center"
             android:padding="@dimen/padding_regular"/>

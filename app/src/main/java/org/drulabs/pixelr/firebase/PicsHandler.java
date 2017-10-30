@@ -41,6 +41,47 @@ public class PicsHandler {
     private FirebaseAnalytics mAnalytics;
 
     private Query picsQuery;
+    private ValueEventListener picsListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            if (snapshot != null && snapshot.getValue() != null) {
+
+                HashMap<String, PictureDTO> pics = new HashMap<>();
+                String firstElementKey = null;
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    PictureDTO pic = dataSnapshot.getValue(PictureDTO.class);
+                    pic.setPicURL(Constants.PICS_DB + "/" + pic.getPicName() + ".jpg");
+                    pic.setThumbURL(Constants.PICS_DB + "/" + pic.getPicName() + "_thumb.jpg");
+                    pics.put(dataSnapshot.getKey(), pic);
+                    if (firstElementKey == null) {
+                        firstElementKey = dataSnapshot.getKey();
+                    }
+                }
+
+                hasMorePics = pics != null ? pics.size() >= BATCH_SIZE : false;
+                lastTimestamp = pics != null && pics.size() > 0 ? (pics.get(firstElementKey)
+                        .getDateTaken() - 1) : 0;
+
+                DBHandler.getHandle(mContext).addPic(pics);
+
+                // Fetch all the pics liked by user (metadata only)
+                fetchLikedPics(() -> {
+                    mListener.onPhotosFetched(pics);
+                });
+
+                //picsQuery.removeEventListener(this);
+
+            } else {
+                mListener.onError(mContext.getString(R.string.something_went_wrong));
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            mListener.onError(mContext.getString(R.string.something_went_wrong));
+        }
+    };
 
     public PicsHandler(Context cxt, Callback callback) {
         this.mContext = cxt;
@@ -60,11 +101,12 @@ public class PicsHandler {
         }
     }
 
-    public void fetchLikedPics() {
+    private void fetchLikedPics(Completable completable) {
         LikesHandler.fetchLikedArtifacts(mContext, new LikesHandler.IArtifactsCallback() {
             @Override
             public void onArtifactsFetched(List<LikeDTO> myLikes) {
                 DBHandler.getHandle(mContext).updateLikedArtifacts(myLikes);
+                completable.onComplete();
             }
 
             @Override
@@ -73,6 +115,7 @@ public class PicsHandler {
                 Bundle logs = new Bundle();
                 logs.putBoolean("hasLogs", false);
                 mAnalytics.logEvent(store.getMyName() + "(" + store.getMyKey() + ")", null);
+                completable.onComplete();
             }
         });
     }
@@ -114,48 +157,6 @@ public class PicsHandler {
         DBHandler.getHandle(mContext).setLikedForPic(picKey, isLiked);
     }
 
-    private ValueEventListener picsListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot snapshot) {
-            if (snapshot != null && snapshot.getValue() != null) {
-
-                HashMap<String, PictureDTO> pics = new HashMap<>();
-                String firstElementKey = null;
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    PictureDTO pic = dataSnapshot.getValue(PictureDTO.class);
-                    pic.setPicURL(Constants.PICS_DB + "/" + pic.getPicName() + ".jpg");
-                    pic.setThumbURL(Constants.PICS_DB + "/" + pic.getPicName() + "_thumb.jpg");
-                    pics.put(dataSnapshot.getKey(), pic);
-                    if (firstElementKey == null) {
-                        firstElementKey = dataSnapshot.getKey();
-                    }
-                }
-
-                hasMorePics = pics != null ? pics.size() >= BATCH_SIZE : false;
-                lastTimestamp = pics != null && pics.size() > 0 ? (pics.get(firstElementKey)
-                        .getDateTaken() - 1) : 0;
-
-                // Collections.reverse(pics);
-
-                mListener.onPhotosFetched(pics);
-
-                // Fetch all the pics liked by user (metadata only)
-                fetchLikedPics();
-
-                //picsQuery.removeEventListener(this);
-
-            } else {
-                mListener.onError(mContext.getString(R.string.something_went_wrong));
-            }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            mListener.onError(mContext.getString(R.string.something_went_wrong));
-        }
-    };
-
     public void resetLastTimestamp() {
         lastTimestamp = System.currentTimeMillis();
         hasMorePics = true;
@@ -167,6 +168,10 @@ public class PicsHandler {
         void onAllPicsFetched();
 
         void onError(String message);
+    }
+
+    interface Completable {
+        void onComplete();
     }
 
 }

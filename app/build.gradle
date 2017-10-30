@@ -69,6 +69,10 @@ dependencies {
     implementation  'com.google.firebase:firebase-invites:11.4.2'
     //////////////////////////////////////////////////////
 
+    //Firebase Crash Reporting
+    implementation 'com.google.firebase:firebase-crash:11.4.2'
+    //////////////////////////////////////////////////////
+
     //Circular image view
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     //////////////////////////////////////////////////////

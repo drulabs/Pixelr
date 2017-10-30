@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import org.drulabs.pixelr.R;
+import org.drulabs.pixelr.config.Constants;
 import org.drulabs.pixelr.dto.PictureDTO;
 import org.drulabs.pixelr.screens.PresenterCreator;
 import org.drulabs.pixelr.ui.NotificationToast;
@@ -30,19 +31,16 @@ public class PicsFragment extends Fragment implements PicsContract.View {
 
     private static final String ARG_SECTION_NAME = "section_name";
     private static final String ARG_FILTER_TEXT = "filter_text";
-
+    private static final int VISIBLE_THRESHOLD = 0;
     // TODO: Rename and change types of parameters
     private String mSectionName;
     private String mFilterText;
-
     // Presenter for this view
     private PicsContract.Presenter mPresenter;
-
     // other required variables
     private PicsAdapter picsAdapter;
     private int totalItemCount, visibleItemCount, firstVisibleItem, previousTotal;
     private boolean isLoading = false;
-    private static final int VISIBLE_THRESHOLD = 0;
     private boolean userInitiatedScroll = false;
 
     // UI References
@@ -60,12 +58,14 @@ public class PicsFragment extends Fragment implements PicsContract.View {
      *
      * @param sectionName name of the section to be viewed.
      * @param filterText  fiter text if any, else pass null.
+     * @param args        extra params if any
      * @return A new instance of fragment PicsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PicsFragment newInstance(String sectionName, String filterText) {
+    public static PicsFragment newInstance(String sectionName, String filterText, Bundle args) {
         PicsFragment fragment = new PicsFragment();
-        Bundle args = new Bundle();
+        if (args == null) {
+            args = new Bundle();
+        }
         args.putString(ARG_SECTION_NAME, sectionName);
         args.putString(ARG_FILTER_TEXT, filterText);
         fragment.setArguments(args);
@@ -122,7 +122,6 @@ public class PicsFragment extends Fragment implements PicsContract.View {
                 // true
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userInitiatedScroll = true;
-
                 }
             }
 
@@ -201,6 +200,27 @@ public class PicsFragment extends Fragment implements PicsContract.View {
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAlpha(1.0f);
         }
+
+        // check if app was launched via push notification
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("key")) {
+
+            String picName = args.getString("picName");
+            String picKey = args.getString("key");
+
+            PictureDTO pic = new PictureDTO();
+            pic.setUploaderId(args.getString("uploaderId"));
+            pic.setCommentsCount(Integer.parseInt(args.getString("commentsCount")));
+            pic.setDateTaken(Long.parseLong(args.getString("dateTaken")));
+            pic.setLikesCount(Integer.parseInt(args.getString("likesCount")));
+            pic.setPhotoCredit(args.getString("photoCredit"));
+            pic.setPicName(picName);
+            pic.setPicURL(Constants.PICS_DB + "/" + picName + ".jpg");
+            pic.setThumbURL(Constants.PICS_DB + "/" + picName + "_thumb.jpg");
+
+            mPresenter.onPicClicked(picKey, pic);
+        }
+
         hideLoading();
     }
 

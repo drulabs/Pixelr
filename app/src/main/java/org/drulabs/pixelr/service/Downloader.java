@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -18,7 +17,6 @@ import org.drulabs.pixelr.ui.NotificationToast;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -209,13 +207,13 @@ public class Downloader extends IntentService {
             if (isSuccessful) {
                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
 
-//                Uri imageUri = FileProvider.getUriForFile(getApplicationContext(), Constants
-//                        .FILE_PROVIDER_AUTHORITY, new File(outputFilePath));
+                Uri imageUri = FileProvider.getUriForFile(getApplicationContext(), Constants
+                        .FILE_PROVIDER_AUTHORITY, new File(outputFilePath));
 
-                String path = MediaStore.Images.Media.insertImage(getContentResolver(),
-                        outputFilePath, "", null);
-
-                Uri imageUri = Uri.parse(path);
+//                String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+//                        outputFilePath, "", null);
+//
+//                Uri imageUri = Uri.parse(path);
 
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -241,7 +239,7 @@ public class Downloader extends IntentService {
                 NotificationToast.showToast(getApplicationContext(), getString(R.string
                         .something_went_wrong));
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             NotificationToast.showToast(getApplicationContext(), getString(R.string
                     .something_went_wrong));

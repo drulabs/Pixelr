@@ -59,6 +59,11 @@
         <item name="android:textColor">@color/pure_black</item>
     </style>
 
+    <style name="actual_comment_text" parent="fontBold">
+        <item name="android:textSize">@dimen/txt_big</item>
+        <item name="android:textColor">@color/pure_black</item>
+    </style>
+
     <style name="like_text" parent="fontBold">
         <item name="android:textSize">@dimen/txt_big</item>
         <item name="android:textColor">@color/pure_black</item>

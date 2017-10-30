@@ -20,7 +20,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_pic_name">Name of the picture</string>
     <string name="add_pic_timestamp">When was this taken ?</string>
-    <string name="add_pic_relationship">Relationship with Vidhi ?</string>
     <string name="add_pic_photographer">Who took this picture ?</string>
     <string name="add_pic_comment">Comments...</string>
     <string name="fill_all_columns">Please fill all the fields</string>
@@ -43,7 +42,7 @@
     <string name="tap_to_open">Tap to open file</string>
     <string name="text_downloading">Downloading...</string>
     <string name="unable_to_share">Unable to share downloaded file</string>
-    <string name="shared_via_vivi">Shared via Vivid Vidhi app for andriod</string>
+    <string name="shared_via_vivi">Shared via Pixelr for andriod</string>
     <string name="commented_on_suffix">commented on</string>
     <string name="created_on_text">Created on</string>
     <string name="no_more_poems_available">No more poems are available at this moment.</string>
@@ -55,4 +54,6 @@
     <string name="pick_from_galery">Pick from gallery</string>
     <string name="camera_capture">Use camera</string>
     <string name="pick_from_galery_title">Select picture</string>
+    <string name="dynamic_link_process_error">Error processing dynamic link</string>
+    <string name="text_share_push_all">Push notify</string>
 </resources>

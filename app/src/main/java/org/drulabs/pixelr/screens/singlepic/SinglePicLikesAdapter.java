@@ -1,12 +1,15 @@
-package org.drulabs.pixelr.screens.like;
+package org.drulabs.pixelr.screens.singlepic;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.dto.LikeDTO;
@@ -22,7 +25,7 @@ import java.util.List;
  * Created by kaushald on 25/02/17.
  */
 
-public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikesVH> {
+public class SinglePicLikesAdapter extends RecyclerView.Adapter<SinglePicLikesAdapter.LikesVH> {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd, yyyy " +
             "(HH:mm:ss)");
@@ -30,9 +33,12 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikesVH> {
     private List<LikeDTO> likes;
     private Context mContext;
 
-    public LikesAdapter(Context mContext) {
+    private FirebaseRemoteConfig mRemoteConfig;
+
+    public SinglePicLikesAdapter(Context mContext) {
         this.mContext = mContext;
         likes = new ArrayList<>();
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
     }
 
     @Override
@@ -86,6 +92,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikesVH> {
             FirebaseImageHelper.loadImageFromUrlInto(mContext, like.getLikerPic(), imgLiker);
             date.setText(dateFormat.format(new Date(like.getLikedOn())));
             liker.setText(like.getLikedByName());
+            liker.setTextColor(Color.parseColor(mRemoteConfig.getString("text_color")));
         }
     }
 }

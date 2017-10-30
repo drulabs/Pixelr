@@ -13,7 +13,7 @@ import org.drulabs.pixelr.firebase.FirebaseImageHelper;
 import org.drulabs.pixelr.firebase.LikesHandler;
 import org.drulabs.pixelr.firebase.PicsHandler;
 import org.drulabs.pixelr.screens.comment.CommentsActivity;
-import org.drulabs.pixelr.screens.like.LikesActivity;
+import org.drulabs.pixelr.screens.singlepic.SinglePicPage;
 import org.drulabs.pixelr.service.Downloader;
 import org.drulabs.pixelr.ui.NotificationToast;
 
@@ -93,11 +93,9 @@ public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callba
 
     @Override
     public void onPicClicked(String key, PictureDTO pic) {
-        Intent likesIntent = new Intent(activity, LikesActivity.class);
-        likesIntent.putExtra(LikesActivity.KEY_TITLE, pic.getPicName());
-        likesIntent.putExtra(LikesActivity.KEY_ARTIFACT_ID, key);
-        likesIntent.putExtra(LikesActivity.KEY_ARTIFACT_TYPE, Constants.PICS_DB);
-        likesIntent.putExtra(LikesActivity.KEY_LIKES_COUNT, pic.getLikesCount());
+        Intent likesIntent = new Intent(activity, SinglePicPage.class);
+        likesIntent.putExtra(SinglePicPage.KEY_PIC_DTO, pic);
+        likesIntent.putExtra(SinglePicPage.KEY_PIC_KEY, key);
         activity.startActivity(likesIntent);
     }
 
