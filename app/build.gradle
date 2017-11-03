@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:11.4.2'
     //////////////////////////////////////////////////////
 
-    //Firebase UI
+    //Firebase UI and Glide
     implementation 'com.firebaseui:firebase-ui:3.1.0'
     implementation 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
