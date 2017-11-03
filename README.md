@@ -21,10 +21,11 @@ Follow the instructions below to setup your machine before you use this project
 
 Description | Screentshot                                                         
 --- | ---                                                          
-Make sure Android API 27 is checked, if not select it and click OK | <img src="/images/api27.jpg" width="70%">
-From SDK Tools tab, install Build-Tools 27 or above | <img src="/images/buildtools27.jpg" width="70%">
-Restart android studio, and make sure Firebase is visible under tools | <img src="/images/toolsfirebase.jpg" width="70%">
---- | ---
+Make sure Android API 27 is checked, if not select it and click OK | <img src="/images/api27.png" width="70%">
+From SDK Tools tab, install Build-Tools 27 or above | <img src="/images/buildtools27.png" width="70%">
+Install latest version of google repository (58+), from tools tab | <img src="/images/googlerepo58.png" width="70%">
+Restart android studio, and make sure Firebase is visible under tools | <img src="/images/toolsfirebase.png" width="70%">
+
   
 ### Install firebase command line tools (firebase CLI)
 
@@ -32,4 +33,4 @@ Restart android studio, and make sure Firebase is visible under tools | <img src
 
 - `npm -version` should work after this. Run this command to install Firebase CLI `npm install -g firebase-tools`. This installs firebase tools globally in your machine.
 
-- To check if firebase is installed run `firebase --version` in terminal. It should show `3.14.0` or higher. The setup is done we can now start the sample Pixelr project.
+- To check if firebase is installed run `firebase --version` in terminal. It should show `3.14.0` or higher. The setup is complete we can now start with the sample project (Pixelr).
