@@ -21,10 +21,10 @@ Follow the instructions below to setup your machine before you use this project
 
 Description | Screentshot                                                         
 --- | ---                                                          
-Make sure Android API 27 is checked, if not select it and click OK | <img src="/images/api27.png" width="70%">
-From SDK Tools tab, install Build-Tools 27 or above | <img src="/images/buildtools27.png" width="70%">
-Install latest version of google repository (58+), from tools tab | <img src="/images/googlerepo58.png" width="70%">
-Restart android studio, and make sure Firebase is visible under tools | <img src="/images/toolsfirebase.png" width="70%">
+Make sure Android API 27 is checked, if not select it and click OK | <img src="/images/api27.png" width="100%">
+From SDK Tools tab, install Build-Tools 27 or above | <img src="/images/buildtools27.png" width="100%">
+Install latest version of google repository (58+), from tools tab | <img src="/images/googlerepo58.png" width="100%">
+Restart android studio, and make sure Firebase is visible under tools | <img src="/images/toolsfirebase.png" width="100%">
 
   
 ### Install firebase command line tools (firebase CLI)
