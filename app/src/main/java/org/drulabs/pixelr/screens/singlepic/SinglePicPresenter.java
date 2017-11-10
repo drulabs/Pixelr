@@ -3,9 +3,11 @@ package org.drulabs.pixelr.screens.singlepic;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
@@ -29,6 +31,9 @@ public class SinglePicPresenter implements SinglePicContract.Presenter, LikesHan
 
     private LikesHandler likesHandler;
 
+    // Analytics
+    FirebaseAnalytics mFirebaseAnalytics;
+
     public SinglePicPresenter(Context context, SinglePicContract.View view, String artifactId) {
         this.mContext = context;
         this.view = view;
@@ -36,6 +41,8 @@ public class SinglePicPresenter implements SinglePicContract.Presenter, LikesHan
 
         this.view.setPresenter(this);
         this.likesHandler = new LikesHandler(mContext, this, this.artifactId);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     @Override
@@ -100,6 +107,13 @@ public class SinglePicPresenter implements SinglePicContract.Presenter, LikesHan
 
     @Override
     public void shareDynamicLink(String artifactId) {
+
+        Bundle bundle4 = new Bundle();
+        bundle4.putString(FirebaseAnalytics.Param.ITEM_ID, "dynamic_link_share");
+        bundle4.putString(FirebaseAnalytics.Param.ITEM_NAME, "Share dynamic link");
+        bundle4.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "share");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle4);
+
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://drulabs.org?artifact=" + artifactId))
                 .setDynamicLinkDomain("h3x4k.app.goo.gl")

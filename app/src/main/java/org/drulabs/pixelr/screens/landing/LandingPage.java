@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.drulabs.pixelr.R;
@@ -27,7 +28,8 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
     private static final long SWIPE_REFRESH_DELAY_MILLIS = 2500;
     private static final String TAG_PICS = "pics";
     PicsFragment picsFragment;
-
+    // Analytics
+    FirebaseAnalytics mFirebaseAnalytics;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Bundle savedInstanceState;
 
@@ -42,6 +44,8 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
 
         swipeRefreshLayout = findViewById(R.id.pics_swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         picsFragment = (PicsFragment) getSupportFragmentManager().findFragmentByTag(TAG_PICS);
         if (picsFragment == null) {
@@ -93,10 +97,22 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
             case R.id.only_audio:
             case R.id.only_picture:
                 NotificationToast.showToast(this, getString(R.string.feature_coming_soon));
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "unsupported menu clicked in " +
+                        "landing");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "video/audio/picture");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "unsupported");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 return true;
             case R.id.bug_report_menu:
 
                 try {
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString(FirebaseAnalytics.Param.ITEM_ID, "bugreport_menu");
+                    bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME, "Bug report item");
+                    bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "bug");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle2);
+
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                     String version = pInfo.versionName;
 
@@ -109,10 +125,24 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
                 }
                 return true;
             case R.id.menu_user_notes:
+
+                Bundle bundle2 = new Bundle();
+                bundle2.putString(FirebaseAnalytics.Param.ITEM_ID, "notes_menu");
+                bundle2.putString(FirebaseAnalytics.Param.ITEM_NAME, "User notes");
+                bundle2.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "achievement");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.UNLOCK_ACHIEVEMENT, bundle2);
+
                 Intent notestIntent = new Intent(this, UserNotes.class);
                 startActivity(notestIntent);
                 return true;
             case R.id.menu_logout:
+
+                Bundle bundle3 = new Bundle();
+                bundle3.putString(FirebaseAnalytics.Param.ITEM_ID, "logout");
+                bundle3.putString(FirebaseAnalytics.Param.ITEM_NAME, "User logout");
+                bundle3.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "login");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.REMOVE_FROM_CART, bundle3);
+
                 //Logout the user and navigate to Login screen
                 FirebaseAuth.getInstance().signOut();
                 Intent loginPageIntent = new Intent(LandingPage.this, LoginActivity.class);
@@ -123,6 +153,11 @@ public class LandingPage extends AppCompatActivity implements SwipeRefreshLayout
                 // this is only for testing purpose
                 throw new ArrayIndexOutOfBoundsException("Fatal array out of bound exception");
             case R.id.add_stuff:
+                Bundle bundle4 = new Bundle();
+                bundle4.putString(FirebaseAnalytics.Param.ITEM_ID, "addpic");
+                bundle4.putString(FirebaseAnalytics.Param.ITEM_NAME, "Add pic");
+                bundle4.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "add");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART, bundle4);
                 navigateToAddPicActivity();
                 return true;
             default:

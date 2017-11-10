@@ -25,7 +25,11 @@ public class UserDTO {
         currentUser.setDisplayName(user.getDisplayName());
         currentUser.setProvider(user.getProviders().get(0));
         currentUser.setUid(user.getUid());
-        currentUser.setPicUrl(user.getPhotoUrl().toString());
+
+        String photoURL = user.getPhotoUrl() == null ? "https://learningdru" +
+                ".com/images/portfolio/img8.jpg" : user.getPhotoUrl().toString();
+
+        currentUser.setPicUrl(photoURL);
         currentUser.setEmail(user.getEmail());
 
         return currentUser;

@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.AddTrace;
+import com.google.firebase.perf.metrics.Trace;
+
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.config.Constants;
 import org.drulabs.pixelr.dto.PictureDTO;
@@ -47,6 +51,9 @@ public class PicsFragment extends Fragment implements PicsContract.View {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar progressBar;
+
+    // Tracer
+    Trace loaderTrace = FirebasePerformance.getInstance().newTrace("LandingLoader");
 
     public PicsFragment() {
         // Required empty public constructor
@@ -175,11 +182,13 @@ public class PicsFragment extends Fragment implements PicsContract.View {
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
             recyclerView.setAlpha(0.2f);
+            loaderTrace.start();
         }
     }
 
     @Override
     public void hideLoading() {
+        loaderTrace.stop();
         if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(View.GONE);
             recyclerView.setAlpha(1.0f);
@@ -193,6 +202,7 @@ public class PicsFragment extends Fragment implements PicsContract.View {
     }
 
     @Override
+    @AddTrace(name = "loadPics")
     public void loadPics(HashMap<String, PictureDTO> photos) {
         picsAdapter.append(photos);
 

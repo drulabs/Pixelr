@@ -3,14 +3,18 @@ package org.drulabs.pixelr.screens.landing;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.widget.ImageView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.config.Constants;
 import org.drulabs.pixelr.dto.PictureDTO;
 import org.drulabs.pixelr.firebase.FirebaseImageHelper;
-import org.drulabs.pixelr.firebase.LikesHandler;
 import org.drulabs.pixelr.firebase.PicsHandler;
 import org.drulabs.pixelr.screens.comment.CommentsActivity;
 import org.drulabs.pixelr.screens.singlepic.SinglePicPage;
@@ -25,17 +29,20 @@ import java.util.HashMap;
 
 public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callback {
 
+    // Tracer
+    Trace landingTrace = FirebasePerformance.getInstance().newTrace("LandingPage");
+    // Analytics
+    FirebaseAnalytics mFirebaseAnalytics;
     private PicsContract.View view;
     private Activity activity;
-
     private PicsHandler picsHandler;
-    private LikesHandler likesHandler;
 
     public PicsPresenter(Activity activity, PicsContract.View view) {
         this.view = view;
         this.activity = activity;
         picsHandler = new PicsHandler(this.activity, this);
         view.setPresenter(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(activity);
     }
 
     @Override
@@ -56,12 +63,14 @@ public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callba
     @Override
     public void start() {
         loadNextBatch();
+        landingTrace.start();
     }
 
     @Override
     public void destroy() {
         this.view = null;
         this.picsHandler = null;
+        landingTrace.stop();
     }
 
     @Override
@@ -97,11 +106,17 @@ public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callba
         likesIntent.putExtra(SinglePicPage.KEY_PIC_DTO, pic);
         likesIntent.putExtra(SinglePicPage.KEY_PIC_KEY, key);
         activity.startActivity(likesIntent);
+        // Count number of picture clicks
+        landingTrace.incrementCounter("pictureClicked");
     }
 
     @Override
     public void onLikeClicked(String key, PictureDTO pic, boolean liked) {
         picsHandler.updateLikesCount(key, liked);
+        // Count number of picture like clicks
+        if (liked) {
+            landingTrace.incrementCounter("likeClicked");
+        }
     }
 
     @Override
@@ -111,6 +126,8 @@ public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callba
         commentIntent.putExtra(CommentsActivity.KEY_ARTIFACT_ID, key);
         commentIntent.putExtra(CommentsActivity.KEY_ARTIFACT_TYPE, Constants.PICS_DB);
         activity.startActivity(commentIntent);
+        // Count number of picture comment clicks
+        landingTrace.incrementCounter("pictureClicked");
     }
 
     @Override
@@ -135,6 +152,13 @@ public class PicsPresenter implements PicsContract.Presenter, PicsHandler.Callba
                         .something_went_wrong));
             }
         });
+
+        // Analytics share clicked
+        Bundle params = new Bundle();
+        params.putString("image_name", pic.getPicName());
+        params.putString("pic_url", pic.getPicURL());
+        params.putString("pic_credit", pic.getPhotoCredit());
+        mFirebaseAnalytics.logEvent("share_image", params);
     }
 
     @Override

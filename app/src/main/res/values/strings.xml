@@ -3,6 +3,10 @@
     <string name="sign_in_text">Sign in using any of the available services</string>
     <string name="com.twitter.sdk.android.CONSUMER_KEY">7iKOilYZgBEcPXZOSlCpCuGaZ</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">ISSeOrRVcoIJYczdIbKzanxcFrYmmczJw3rSPRGkhIs02hwP9x</string>
+    <string name="facebook_application_id" translatable="false">656411391166177</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb656411391166177</string>
+    <string name="twitter_consumer_key" translatable="false">7iKOilYZgBEcPXZOSlCpCuGaZ</string>
+    <string name="twitter_consumer_secret" translatable="false">ISSeOrRVcoIJYczdIbKzanxcFrYmmczJw3rSPRGkhIs02hwP9x</string>
     <string name="something_went_wrong">Something went wrong. Please try again later</string>
     <string name="required_permission_denied">This permission is required for app to function</string>
     <string name="empty_username_msg">Please enter username before adding profile pic</string>

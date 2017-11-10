@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -19,6 +21,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,41 +36,50 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.drulabs.pixelr.BuildConfig;
 import org.drulabs.pixelr.R;
 import org.drulabs.pixelr.dto.UserDTO;
 import org.drulabs.pixelr.screens.landing.LandingPage;
 import org.drulabs.pixelr.utils.Store;
 import org.drulabs.pixelr.utils.Utility;
 
+import java.util.Arrays;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int GOOGLE_SIGN_IN = 9001;
+    private static final int FIREBASE_UI_SIGN_IN = 5501;
     private static final int CAMERA_CODE = 7001;
     private final String GoogleOAuthClientId = "835832928476-p9cdfigna9johuush2pohb29q2d89nol" +
             ".apps.googleusercontent.com";
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference usersRef = database.getReference("users");
+    // Analytics
+    FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private View btnGoogleLogin;
     private TwitterLoginButton btnTwitterLogin;
     private Bundle extras;
-
     private ProgressBar loginProgress;
+
+    private boolean isFirebaseUILoginInitiated = false;
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            navigateToLandingPage();
-        } else {
-            boolean writePermissionGranted = Utility.checkPermission(Manifest.permission
-                    .WRITE_EXTERNAL_STORAGE, this);
-            if (!writePermissionGranted) {
-                Utility.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        CAMERA_CODE, this);
+        if (!isFirebaseUILoginInitiated) {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                navigateToLandingPage();
+            } else {
+                boolean writePermissionGranted = Utility.checkPermission(Manifest.permission
+                        .WRITE_EXTERNAL_STORAGE, this);
+                if (!writePermissionGranted) {
+                    Utility.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            CAMERA_CODE, this);
+                }
             }
         }
     }
@@ -87,6 +99,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -180,6 +194,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         }
 
+        if (requestCode == FIREBASE_UI_SIGN_IN) {
+            isFirebaseUILoginInitiated = false;
+            // Successfully signed in
+            if (resultCode == RESULT_OK) {
+                IdpResponse response = IdpResponse.fromResultIntent(data);
+                processLogin(FirebaseAuth.getInstance().getCurrentUser());
+                return;
+            } else {
+                // Sign in failed
+                Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
         // Pass the activity result to the Twitter login button.
         try {
             btnTwitterLogin.onActivityResult(requestCode, resultCode, data);
@@ -220,6 +248,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void processLogin(FirebaseUser user) {
         if (user != null) {
             UserDTO currentUser = UserDTO.from(user);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("username", currentUser.getDisplayName());
+            bundle.putString("Login_via", currentUser.getProvider());
+            bundle.putString("user_pic", currentUser.getPicUrl());
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
             usersRef.child(currentUser.getUid()).setValue(currentUser).addOnCompleteListener(t -> {
                 // User logged in. Saving data locally
                 Store.getInstance(LoginActivity.this).setUser(currentUser);
@@ -245,8 +280,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (extras != null) {
             landingPageIntent.putExtras(extras);
         }
-        startActivity(landingPageIntent);
 
+        Bundle bundle4 = new Bundle();
+        bundle4.putString(FirebaseAnalytics.Param.ITEM_ID, "addpic");
+        bundle4.putString(FirebaseAnalytics.Param.ITEM_NAME, "Add pic");
+        bundle4.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "add");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART, bundle4);
+
+        startActivity(landingPageIntent);
         // Finish Login page
         if (!isDestroyed()) {
             LoginActivity.this.finish();
@@ -262,4 +303,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
 
     }
+
+    public void firebaseUILogin(View v) {
+        isFirebaseUILoginInitiated = true;
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(
+                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))
+                        .setTosUrl("https://www.javacodegeeks.com/2011/06/android-game-development-tutorials.html")
+                        .setPrivacyPolicyUrl("https://www.javacodegeeks.com/2011/06/android-game-development-tutorials.html")
+                        .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                        .build(),
+                FIREBASE_UI_SIGN_IN);
+    }
+
 }
